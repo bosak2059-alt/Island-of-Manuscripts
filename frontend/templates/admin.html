@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель | Остров Рукописей</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+<body class="admin-body">
+
+    <header class="admin-header">
+        <div class="container admin-nav">
+            <h1 class="admin-title">Админ-панель</h1>
+            <div class="admin-links">
+                <a href="/" class="btn-link">На сайт</a>
+                <a href="#" onclick="logout()" class="btn-link btn-logout">Выход</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container admin-main">
+        <section class="content-section">
+            <h2>Все рукописи</h2>
+            
+            <div class="table-responsive">
+                <table id="submissionsTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Автор</th>
+                            <th>Email</th>
+                            <th>Название</th>
+                            <th>Жанр</th>
+                            <th>Статус</th>
+                            <th>Файл</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7" class="loading-text">Загрузка данных...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Функция загрузки данных
+        async function loadSubmissions() {
+            try {
+                const response = await fetch('/api/admin/all-submissions');
+                
+                if (response.status === 403 || response.status === 401) {
+                    alert('Доступ запрещен! Вы не авторизованы как администратор.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const data = await response.json();
+                const tbody = document.querySelector('#submissionsTable tbody');
+                tbody.innerHTML = '';
+
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty-message">Нет заявок на рассмотрение.</td></tr>';
+                    return;
+                }
+
+                data.forEach(sub => {
+                    const tr = document.createElement('tr');
+                    
+                    // Ссылка на файл (если есть)
+                    let fileLink = sub.filename ? 
+                        `<a href="/api/admin/download/${sub.filename}" class="btn-download" target="_blank">Скачать</a>` : 
+                        '<span class="no-file">Нет файла</span>';
+
+                    // Кнопки управления статусом
+                    const actions = `
+                        <button class="btn-action btn-approve" onclick="updateStatus('${sub.id}', 'Approved')" title="Одобрить">✅</button>
+                        <button class="btn-action btn-reject" onclick="updateStatus('${sub.id}', 'Rejected')" title="Отклонить">❌</button>
+                    `;
+
+                    tr.innerHTML = `
+                        <td>${sub.author_name}</td>
+                        <td>${sub.email}</td>
+                        <td>${sub.manuscript_title}</td>
+                        <td>${sub.genre || '-'}</td>
+                        <td class="status-cell status-${sub.status}">${sub.status}</td>
+                        <td>${fileLink}</td>
+                        <td class="actions-cell">${actions}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+                document.querySelector('#submissionsTable tbody').innerHTML = '<tr><td colspan="7" class="error-message">Ошибка загрузки данных. Проверьте консоль.</td></tr>';
+            }
+        }
+
+        // Функция обновления статуса
+        async function updateStatus(id, newStatus) {
+            if(!confirm(`Вы уверены, что хотите изменить статус на ${newStatus}?`)) return;
+
+            const response = await fetch('/api/admin/update-status', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: id, status: newStatus})
+            });
+
+            if (response.ok) {
+                loadSubmissions(); // Перезагрузить таблицу
+            } else {
+                alert('Ошибка обновления статуса');
+            }
+        }
+
+        // Функция выхода
+        async function logout() {
+            await fetch('/api/logout', {method: 'POST'});
+            window.location.href = '/';
+        }
+
+        // Запуск при загрузке страницы
+        document.addEventListener('DOMContentLoaded', loadSubmissions);
+    </script>
+</body>
+</html>

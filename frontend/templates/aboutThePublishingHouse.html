@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>О издательстве | Остров Рукописей</title>
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
 <body>
     <header>
         <nav>
+            <a href="/" class="logo">Остров Рукописей</a>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <ul>
-                <!-- Ссылки теперь ведут на маршруты Flask, а не на файлы -->
                 <li><a href="/">Главная</a></li>
                 <li><a href="/to-authors">Авторам</a></li>
                 <li><a href="/catalog">Каталог книг</a></li>
-                <li><a href="/about">О издательстве</a></li> 
+                <li><a href="/about" class="active">О издательстве</a></li>
                 <li><a href="/blog">Блог</a></li>
                 <li><a href="/contacts">Контакты</a></li>
                 <li><a href="/login">Вход</a></li>
@@ -24,10 +29,100 @@
     </header>
 
     <main>
-        
+        <section class="about-hero">
+            <div class="about-hero-content">
+                <h1>О издательстве <span class="text-gold">"Остров Рукописей"</span></h1>
+                <p class="hero-subtitle">Где рождаются новые литературные миры</p>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="content-section">
+                <h2>📖 Наша история</h2>
+                <p>Издательство <strong>"Остров Рукописей"</strong> было основано в 2015 году группой энтузиастов, объединённых любовью к литературе и верой в талант новых авторов. За годы работы мы опубликовали более 500 книг различных жанров и помогли десяткам начинающих писателей найти своих читателей.</p>
+                <p>Наша миссия — открывать новые имена, поддерживать талантливых авторов и доносить качественные литературные произведения до широкой аудитории.</p>
+            </div>
+
+            <div class="content-section">
+                <h2>🎯 Наши ценности</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">✨</div>
+                        <h3>Качество</h3>
+                        <p>Каждая книга проходит тщательную редактуру и подготовку</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">🤝</div>
+                        <h3>Партнёрство</h3>
+                        <p>Мы работаем с авторами как с равными партнёрами</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">🌟</div>
+                        <h3>Инновации</h3>
+                        <p>Используем современные технологии продвижения книг</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">💚</div>
+                        <h3>Поддержка</h3>
+                        <p>Помогаем авторам на всех этапах публикации</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>📊 Наши достижения</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" data-count="500">0</span>
+                        <span class="stat-label">Опубликованных книг</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-count="350">0</span>
+                        <span class="stat-label">Авторов</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-count="50000">0</span>
+                        <span class="stat-label">Читателей</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-count="8">0</span>
+                        <span class="stat-label">Лет на рынке</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>👥 Команда издательства</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">👤</div>
+                        <h3>Александр Петров</h3>
+                        <p class="member-role">Главный редактор</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">👤</div>
+                        <h3>Елена Смирнова</h3>
+                        <p class="member-role">Литературный агент</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">👤</div>
+                        <h3>Михаил Козлов</h3>
+                        <p class="member-role">Дизайнер обложек</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">👤</div>
+                        <h3>Анна Васильева</h3>
+                        <p class="member-role">Маркетолог</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <script src="/frontend/js/main.js"></script>
-    <footer></footer>
+    <footer>
+        <p>&copy; 2024 Издательство "Остров Рукописей". Все права защищены.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>

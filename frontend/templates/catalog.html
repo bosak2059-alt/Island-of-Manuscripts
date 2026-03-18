@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Каталог книг | Остров Рукописей</title>
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
 <body>
     <header>
         <nav>
+            <a href="/" class="logo">Остров Рукописей</a>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <ul>
-                <!-- Ссылки теперь ведут на маршруты Flask, а не на файлы -->
                 <li><a href="/">Главная</a></li>
                 <li><a href="/to-authors">Авторам</a></li>
-                <li><a href="/catalog">Каталог книг</a></li>
-                <li><a href="/about">О издательстве</a></li> 
+                <li><a href="/catalog" class="active">Каталог книг</a></li>
+                <li><a href="/about">О издательстве</a></li>
                 <li><a href="/blog">Блог</a></li>
                 <li><a href="/contacts">Контакты</a></li>
                 <li><a href="/login">Вход</a></li>
@@ -24,10 +29,161 @@
     </header>
 
     <main>
-        
+        <section class="catalog-hero">
+            <h1>📚 Каталог книг</h1>
+            <p>Откройте для себя новые миры и истории</p>
+        </section>
+
+        <section class="catalog-filters">
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label for="genre-filter">Жанр:</label>
+                    <select id="genre-filter">
+                        <option value="all">Все жанры</option>
+                        <option value="fantasy">Фэнтези</option>
+                        <option value="romance">Романтика</option>
+                        <option value="detective">Детектив</option>
+                        <option value="scifi">Научная фантастика</option>
+                        <option value="drama">Драма</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sort-filter">Сортировка:</label>
+                    <select id="sort-filter">
+                        <option value="newest">Новые</option>
+                        <option value="popular">Популярные</option>
+                        <option value="rating">По рейтингу</option>
+                        <option value="price">По цене</option>
+                    </select>
+                </div>
+                <div class="filter-group search-group">
+                    <input type="text" id="search-input" placeholder="Поиск по названию или автору...">
+                </div>
+            </div>
+        </section>
+
+        <section class="books-showcase catalog-grid">
+            <div class="book-card" data-genre="fantasy">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400" alt="Обложка книги">
+                    <span class="book-badge">Новинка</span>
+                </div>
+                <div class="book-info">
+                    <h3>Тайна Древнего Леса</h3>
+                    <p class="book-author">Мария Иванова</p>
+                    <p class="book-genre">Фэнтези</p>
+                    <div class="book-price">450 ₽</div>
+                    <div class="book-rating">⭐ 4.8</div>
+                </div>
+            </div>
+
+            <div class="book-card" data-genre="romance">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" alt="Обложка книги">
+                </div>
+                <div class="book-info">
+                    <h3>Сердце в огне</h3>
+                    <p class="book-author">Алексей Петров</p>
+                    <p class="book-genre">Романтика</p>
+                    <div class="book-price">390 ₽</div>
+                    <div class="book-rating">⭐ 4.5</div>
+                </div>
+            </div>
+
+            <div class="book-card" data-genre="detective">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400" alt="Обложка книги">
+                    <span class="book-badge">Хит</span>
+                </div>
+                <div class="book-info">
+                    <h3>Последний свидетель</h3>
+                    <p class="book-author">Дмитрий Соколов</p>
+                    <p class="book-genre">Детектив</p>
+                    <div class="book-price">520 ₽</div>
+                    <div class="book-rating">⭐ 4.9</div>
+                </div>
+            </div>
+
+            <div class="book-card" data-genre="scifi">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400" alt="Обложка книги">
+                </div>
+                <div class="book-info">
+                    <h3>Звёздный путь</h3>
+                    <p class="book-author">Елена Козлова</p>
+                    <p class="book-genre">Научная фантастика</p>
+                    <div class="book-price">480 ₽</div>
+                    <div class="book-rating">⭐ 4.6</div>
+                </div>
+            </div>
+
+            <div class="book-card" data-genre="drama">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400" alt="Обложка книги">
+                </div>
+                <div class="book-info">
+                    <h3>Между нами</h3>
+                    <p class="book-author">Ольга Смирнова</p>
+                    <p class="book-genre">Драма</p>
+                    <div class="book-price">410 ₽</div>
+                    <div class="book-rating">⭐ 4.7</div>
+                </div>
+            </div>
+
+            <div class="book-card" data-genre="fantasy">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400" alt="Обложка книги">
+                </div>
+                <div class="book-info">
+                    <h3>Магия теней</h3>
+                    <p class="book-author">Игорь Волков</p>
+                    <p class="book-genre">Фэнтези</p>
+                    <div class="book-price">470 ₽</div>
+                    <div class="book-rating">⭐ 4.4</div>
+                </div>
+            </div>
+
+            <div class="book-card" data-genre="romance">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400" alt="Обложка книги">
+                    <span class="book-badge">-20%</span>
+                </div>
+                <div class="book-info">
+                    <h3>Любовь вне времени</h3>
+                    <p class="book-author">Анна Новикова</p>
+                    <p class="book-genre">Романтика</p>
+                    <div class="book-price"><span class="old-price">500 ₽</span> 400 ₽</div>
+                    <div class="book-rating">⭐ 4.8</div>
+                </div>
+            </div>
+
+            <div class="book-card" data-genre="detective">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400" alt="Обложка книги">
+                </div>
+                <div class="book-info">
+                    <h3>Тёмная вода</h3>
+                    <p class="book-author">Сергей Морозов</p>
+                    <p class="book-genre">Детектив</p>
+                    <div class="book-price">440 ₽</div>
+                    <div class="book-rating">⭐ 4.5</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pagination">
+            <button class="page-btn" disabled>← Назад</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">Вперёд →</button>
+        </section>
     </main>
 
-    <script src="/frontend/js/main.js"></script>
-    <footer></footer>
+    <footer>
+        <p>&copy; 2024 Издательство "Остров Рукописей". Все права защищены.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>

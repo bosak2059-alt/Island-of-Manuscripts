@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Контакты | Остров Рукописей</title>
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
 <body>
     <header>
         <nav>
+            <a href="/" class="logo">Остров Рукописей</a>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             <ul>
-                <!-- Ссылки теперь ведут на маршруты Flask, а не на файлы -->
                 <li><a href="/">Главная</a></li>
                 <li><a href="/to-authors">Авторам</a></li>
                 <li><a href="/catalog">Каталог книг</a></li>
-                <li><a href="/about">О издательстве</a></li> 
+                <li><a href="/about">О издательстве</a></li>
                 <li><a href="/blog">Блог</a></li>
-                <li><a href="/contacts">Контакты</a></li>
+                <li><a href="/contacts" class="active">Контакты</a></li>
                 <li><a href="/login">Вход</a></li>
                 <li><a href="/register">Регистрация</a></li>
             </ul>
@@ -24,10 +29,114 @@
     </header>
 
     <main>
-        
+        <section class="contacts-hero">
+            <h1>📬 Контакты</h1>
+            <p>Свяжитесь с нами любым удобным способом</p>
+        </section>
+
+        <section class="contacts-section">
+            <div class="contacts-grid">
+                <div class="contact-info">
+                    <div class="content-section">
+                        <h2>📍 Наша информация</h2>
+                        <div class="info-item">
+                            <span class="info-icon">🏢</span>
+                            <div>
+                                <h3>Адрес</h3>
+                                <p>г. Москва, ул. Литературная, д. 42, офис 15</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">📞</span>
+                            <div>
+                                <h3>Телефон</h3>
+                                <p>+7 (495) 123-45-67</p>
+                                <p>+7 (999) 876-54-32</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">✉️</span>
+                            <div>
+                                <h3>Email</h3>
+                                <p>info@manuscript-island.ru</p>
+                                <p>authors@manuscript-island.ru</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">🕐</span>
+                            <div>
+                                <h3>Режим работы</h3>
+                                <p>Пн-Пт: 9:00 - 18:00</p>
+                                <p>Сб-Вс: Выходной</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>🌐 Социальные сети</h2>
+                        <div class="social-links">
+                            <a href="#" class="social-link">VK</a>
+                            <a href="#" class="social-link">Telegram</a>
+                            <a href="#" class="social-link">YouTube</a>
+                            <a href="#" class="social-link">Instagram</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-wrapper">
+                    <div class="content-section">
+                        <h2>💌 Напишите нам</h2>
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Ваше имя <span class="required">*</span></label>
+                                    <input type="text" id="name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email <span class="required">*</span></label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Тема</label>
+                                <select id="subject" name="subject">
+                                    <option value="general">Общий вопрос</option>
+                                    <option value="submission">Отправка рукописи</option>
+                                    <option value="cooperation">Сотрудничество</option>
+                                    <option value="support">Техподдержка</option>
+                                    <option value="other">Другое</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Сообщение <span class="required">*</span></label>
+                                <textarea id="message" name="message" rows="6" required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Отправить сообщение</button>
+                        </form>
+                        <div class="form-message" id="formMessage"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section map-section">
+                <h2>🗺️ Мы на карте</h2>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2245.5!2d37.6!3d55.75!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTXCsDQ1JzAwLjAiTiAzN8KwMzYnMDAuMCJF!5e0!3m2!1sru!2sru!4v1234567890" 
+                            width="100%" 
+                            height="400" 
+                            style="border:0; border-radius: 8px;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <script src="/frontend/js/main.js"></script>
-    <footer></footer>
+    <footer>
+        <p>&copy; 2024 Издательство "Остров Рукописей". Все права защищены.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>
