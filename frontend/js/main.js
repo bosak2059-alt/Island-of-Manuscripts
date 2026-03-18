@@ -186,14 +186,30 @@ async function checkAuthStatus() {
 }
 
 function updateAuthUI(user) {
-    // Здесь можно обновить меню, показать имя пользователя и т.д.
-    const authLinks = document.querySelectorAll('.auth-link');
+    // Обновляем ссылки навигации
+    const authLinks = document.querySelectorAll('.auth-link, nav a'); // Ищем и в спец классах и в обычном меню
+    
     authLinks.forEach(link => {
-        if (link.textContent.includes('Вход') || link.textContent.includes('Регистрация')) {
+        const text = link.textContent.trim();
+        // Если ссылка ведет на вход или регистрацию, меняем её
+        if (link.getAttribute('href') === '/login' || link.getAttribute('href') === '/register') {
             link.textContent = 'Кабинет';
-            link.href = '/author/dashboard';
+            link.href = '/profile'; // Ссылка на новый профиль
+            link.classList.add('profile-link'); // Можно добавить стиль
+        }
+        
+        // Если пользователь уже в профиле, можно подсветить активный пункт
+        if (window.location.pathname === '/profile' && link.getAttribute('href') === '/profile') {
+            link.style.fontWeight = 'bold';
         }
     });
+
+    // Опционально: Показать имя пользователя в хедере, если есть элемент с id current-user
+    const userDisplay = document.getElementById('current-user-name');
+    if (userDisplay && user) {
+        userDisplay.textContent = user.username;
+        userDisplay.style.display = 'inline';
+    }
 }
 
 // ========================================

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Блог | Остров Рукописей</title>
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
+
 <body>
     <header>
         <nav>
@@ -17,13 +19,14 @@
             </div>
             <ul>
                 <li><a href="/">Главная</a></li>
-                <li><a href="/to-authors">Авторам</a></li>
                 <li><a href="/catalog">Каталог книг</a></li>
+                <li><a href="/to-authors">Авторам</a></li>
                 <li><a href="/about">О издательстве</a></li>
-                <li><a href="/blog" class="active">Блог</a></li>
+                <li><a href="/blog">Блог</a></li>
                 <li><a href="/contacts">Контакты</a></li>
-                <li><a href="/login">Вход</a></li>
-                <li><a href="/register">Регистрация</a></li>
+                <!-- Важно: добавьте класс auth-link сюда -->
+                <li><a href="/login" class="auth-link">Вход</a></li>
+                <li><a href="/register" class="auth-link">Регистрация</a></li>
             </ul>
         </nav>
     </header>
@@ -55,7 +58,8 @@
                             <span class="blog-category">Новости</span>
                         </div>
                         <h3>Новые книги января 2024</h3>
-                        <p>Представляем вам подборку самых ожидаемых новинок этого месяца. Пять захватывающих историй от наших авторов...</p>
+                        <p>Представляем вам подборку самых ожидаемых новинок этого месяца. Пять захватывающих историй от
+                            наших авторов...</p>
                         <a href="#" class="read-more">Читать далее →</a>
                     </div>
                 </article>
@@ -70,7 +74,8 @@
                             <span class="blog-category">Советы</span>
                         </div>
                         <h3>Как написать первую главу?</h3>
-                        <p>Советы от наших редакторов о том, как зацепить читателя с первых строк и не потерять его внимание...</p>
+                        <p>Советы от наших редакторов о том, как зацепить читателя с первых строк и не потерять его
+                            внимание...</p>
                         <a href="#" class="read-more">Читать далее →</a>
                     </div>
                 </article>
@@ -85,7 +90,8 @@
                             <span class="blog-category">Интервью</span>
                         </div>
                         <h3>Интервью с Марией Ивановой</h3>
-                        <p>Побеседовали с автором бестселлера "Тайна Древнего Леса" о творчестве, вдохновении и планах...</p>
+                        <p>Побеседовали с автором бестселлера "Тайна Древнего Леса" о творчестве, вдохновении и
+                            планах...</p>
                         <a href="#" class="read-more">Читать далее →</a>
                     </div>
                 </article>
@@ -101,7 +107,8 @@
                             <span class="blog-category">События</span>
                         </div>
                         <h3>Литературный вечер в Москве</h3>
-                        <p>Приглашаем всех любителей литературы на встречу с авторами издательства. Вход свободный...</p>
+                        <p>Приглашаем всех любителей литературы на встречу с авторами издательства. Вход свободный...
+                        </p>
                         <a href="#" class="read-more">Читать далее →</a>
                     </div>
                 </article>
@@ -164,4 +171,5 @@
 
     <script src="main.js"></script>
 </body>
+
 </html>

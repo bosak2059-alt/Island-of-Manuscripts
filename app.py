@@ -14,7 +14,7 @@ import functools
 app = Flask(__name__, template_folder='frontend/templates', static_folder='frontend')
 app.secret_key = 'super_secret_key_island_manuscripts_change_in_production'
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50 MB
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx', 'txt', 'rtf'}
 
 CORS(app, supports_credentials=True)
@@ -34,7 +34,7 @@ def init_db():
     conn = get_db()
     c = conn.cursor()
     
-    # ✅ ИСПРАВЛЕНО: Все SQL-опечатки устранены
+    # Таблица пользователей
     c.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,6 +48,7 @@ def init_db():
         )
     ''')
     
+    # Таблица рукописей
     c.execute('''
         CREATE TABLE IF NOT EXISTS submissions (
             id TEXT PRIMARY KEY,
@@ -69,6 +70,7 @@ def init_db():
         )
     ''')
     
+    # Таблица книг
     c.execute('''
         CREATE TABLE IF NOT EXISTS books (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,6 +88,7 @@ def init_db():
         )
     ''')
     
+    # Таблица контактных сообщений
     c.execute('''
         CREATE TABLE IF NOT EXISTS contact_messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -98,6 +101,7 @@ def init_db():
         )
     ''')
     
+    # Таблица подписчиков рассылки
     c.execute('''
         CREATE TABLE IF NOT EXISTS newsletter_subscribers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -107,7 +111,7 @@ def init_db():
         )
     ''')
     
-    # Создание админа
+    # Создание админа по умолчанию
     c.execute('SELECT count(*) FROM users WHERE role = "admin"')
     if c.fetchone()[0] == 0:
         admin_pass = generate_password_hash('admin123')
@@ -115,7 +119,7 @@ def init_db():
                   ('Admin', 'admin@island.com', admin_pass, 'admin'))
         print("✅ Создан администратор: admin@island.com / admin123")
     
-    # Заполнение книг
+    # Заполнение тестовыми книгами
     c.execute('SELECT count(*) FROM books')
     if c.fetchone()[0] == 0:
         books = [
@@ -146,7 +150,9 @@ def login_required(f):
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            return jsonify({'error': 'Требуется авторизация'}), 401
+            if request.is_json or request.path.startswith('/api'):
+                return jsonify({'error': 'Требуется авторизация'}), 401
+            return redirect(url_for('login_page'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -154,7 +160,9 @@ def admin_required(f):
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         if not session.get('user_role') == 'admin':
-            return jsonify({'error': 'Доступ запрещён'}), 403
+            if request.is_json or request.path.startswith('/api'):
+                return jsonify({'error': 'Доступ запрещён'}), 403
+            return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -173,7 +181,7 @@ def update_user_activity(email):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error updating activity: {e}")
 
 def get_online_users_count():
     try:
@@ -189,7 +197,7 @@ def get_online_users_count():
         return 0
 
 # ========================================
-# 📄 МАРШРУТЫ
+# 📄 МАРШРУТЫ (СТРАНИЦЫ)
 # ========================================
 @app.route('/')
 def index():
@@ -223,10 +231,15 @@ def contacts_page():
 def blog_page():
     return render_template('Blog.html')
 
+@app.route('/profile')
+@login_required
+def profile_page():
+    """Страница личного кабинета пользователя"""
+    return render_template('profile.html')
+
 @app.route('/admin-panel')
+@admin_required
 def admin_panel():
-    if not session.get('user_role') == 'admin':
-        return redirect(url_for('login_page'))
     return render_template('admin.html')
 
 # ========================================
@@ -243,7 +256,7 @@ def api_register():
         return jsonify({'error': 'Заполните все поля'}), 400
     
     if len(password) < 8:
-        return jsonify({'error': 'Пароль минимум 8 символов'}), 400
+        return jsonify({'error': 'Пароль должен содержать минимум 8 символов'}), 400
     
     pwd_hash = generate_password_hash(password)
     
@@ -253,9 +266,9 @@ def api_register():
         c.execute('INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)', 
                   (username, email, pwd_hash))
         conn.commit()
-        return jsonify({'success': True, 'message': 'Регистрация успешна!'})
+        return jsonify({'success': True, 'message': 'Регистрация успешна! Теперь войдите.'})
     except sqlite3.IntegrityError:
-        return jsonify({'error': 'Email уже существует'}), 400
+        return jsonify({'error': 'Такой Email или Имя пользователя уже существует'}), 400
     finally:
         conn.close()
 
@@ -275,11 +288,11 @@ def api_login():
     conn.close()
     
     if user and check_password_hash(user['password_hash'], password):
-        # ✅ ИСПРАВЛЕНО: Конвертируем sqlite3.Row в dict перед .get()
         user_dict = dict(user)
         if not user_dict.get('is_active', 1):
             return jsonify({'error': 'Аккаунт деактивирован'}), 403
         
+        # Запись сессии
         session['user_id'] = user['id']
         session['user_email'] = user['email']
         session['user_role'] = user['role']
@@ -287,17 +300,18 @@ def api_login():
         
         update_user_activity(email)
         
+        # Редирект в зависимости от роли
         if user['role'] == 'admin':
             return jsonify({'success': True, 'redirect': '/admin-panel'})
         else:
-            return jsonify({'success': True, 'redirect': '/'})
+            return jsonify({'success': True, 'redirect': '/profile'}) # Сразу в профиль
     else:
         return jsonify({'error': 'Неверный email или пароль'}), 401
 
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
     session.clear()
-    return jsonify({'success': True})
+    return jsonify({'success': True, 'redirect': '/'})
 
 @app.route('/api/auth/status')
 def auth_status():
@@ -312,6 +326,36 @@ def auth_status():
             }
         })
     return jsonify({'authenticated': False})
+
+# ========================================
+# 👤 API: ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
+# ========================================
+@app.route('/api/profile/data')
+@login_required
+def get_profile_data():
+    conn = get_db()
+    c = conn.cursor()
+    
+    # Получаем данные пользователя
+    c.execute('SELECT username, email, role, created_at FROM users WHERE id = ?', (session['user_id'],))
+    user = c.fetchone()
+    
+    # Получаем список рукописей пользователя
+    c.execute('SELECT manuscript_title, genre, status, submitted_at, filename FROM submissions WHERE user_id = ? ORDER BY submitted_at DESC', (session['user_id'],))
+    submissions = c.fetchall()
+    
+    conn.close()
+    
+    if not user:
+        return jsonify({'error': 'Пользователь не найден'}), 404
+        
+    return jsonify({
+        'username': user['username'],
+        'email': user['email'],
+        'role': user['role'],
+        'joined': user['created_at'],
+        'submissions': [dict(row) for row in submissions]
+    })
 
 # ========================================
 # 📝 API: РУКОПИСИ
@@ -333,7 +377,7 @@ def submit_manuscript():
     
     if file and file.filename:
         if not allowed_file(file.filename):
-            return jsonify({'error': 'Недопустимый формат файла'}), 400
+            return jsonify({'error': 'Недопустимый формат файла. Разрешены: pdf, doc, docx, txt, rtf'}), 400
         filename = f"{sub_id}_{secure_filename(file.filename)}"
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     
@@ -346,7 +390,7 @@ def submit_manuscript():
     conn.commit()
     conn.close()
     
-    return jsonify({'success': True, 'message': 'Рукопись отправлена!'})
+    return jsonify({'success': True, 'message': 'Рукопись успешно отправлена на рассмотрение!'})
 
 @app.route('/api/my-submissions')
 @login_required
@@ -431,9 +475,9 @@ def api_newsletter():
     try:
         c.execute('INSERT INTO newsletter_subscribers (email) VALUES (?)', (email,))
         conn.commit()
-        return jsonify({'success': True, 'message': 'Вы подписаны!'})
+        return jsonify({'success': True, 'message': 'Вы успешно подписаны!'})
     except sqlite3.IntegrityError:
-        return jsonify({'success': True, 'message': 'Вы уже подписаны'})
+        return jsonify({'success': True, 'message': 'Вы уже подписаны на рассылку'})
     finally:
         conn.close()
 
@@ -503,6 +547,7 @@ def admin_update_status():
 @app.route('/api/admin/download/<filename>')
 @admin_required
 def admin_download(filename):
+    # В реальном проекте здесь нужна дополнительная проверка прав
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if os.path.exists(filepath):
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
@@ -533,27 +578,31 @@ def mark_message_read(id):
 # ========================================
 @app.errorhandler(404)
 def not_found(error):
-    return jsonify({'error': 'Страница не найдена'}), 404
+    if request.is_json:
+        return jsonify({'error': 'Страница не найдена'}), 404
+    return render_template('index.html'), 404 # Или специальная страница 404
 
 @app.errorhandler(500)
 def internal_error(error):
-    return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
+    if request.is_json:
+        return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
+    return "Ошибка сервера", 500
 
 # ========================================
 # 🚀 ЗАПУСК
 # ========================================
 if __name__ == '__main__':
-    # ⚠️ УДАЛИТЬ старую БД!
-    import os
+    # Удаляем старую БД при каждом запуске для чистоты теста (можно закомментировать в продакшене)
     if os.path.exists(DB_NAME):
         os.remove(DB_NAME)
         print("🗑️ Старая база данных удалена")
     
     init_db()
     print("\n" + "="*50)
-    print("🏝️  ИЗДАТЕЛЬСТВО 'ОСТРОВ РУКОПИСЕЙ'")
+    print("🏝️  ИЗДАТЕЛЬСТВО 'ОСТРОВ РУКОПИСЕЙ' ЗАПУЩЕНО")
     print("="*50)
     print("📡 Сервер: http://127.0.0.1:5000")
     print("👑 Админ: admin@island.com / admin123")
+    print("🔗 Профиль: http://127.0.0.1:5000/profile")
     print("="*50 + "\n")
     app.run(debug=True, host='0.0.0.0', port=5000)

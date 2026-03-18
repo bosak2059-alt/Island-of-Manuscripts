@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет | Остров Рукописей</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+<body>
+
+    <!-- Хедер (копия структуры с других страниц для единообразия) -->
+    <header>
+        <nav>
+            <a href="/" class="logo">🏝️ Остров Рукописей</a>
+            <div class="mobile-menu-btn">
+                <span></span><span></span><span></span>
+            </div>
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/catalog">Каталог книг</a></li>
+                <li><a href="/to-authors">Авторам</a></li>
+                <li><a href="/about">О издательстве</a></li>
+                <li><a href="/blog">Блог</a></li>
+                <li><a href="/contacts">Контакты</a></li>
+                <!-- Ссылки авторизации будут меняться через JS -->
+                <li><a href="/login" class="auth-link">Вход</a></li>
+                <li><a href="/register" class="auth-link">Регистрация</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="profile-header-section">
+            <h1>Личный кабинет</h1>
+            <p class="profile-subtitle">Управление вашими рукописями и настройками аккаунта</p>
+        </div>
+
+        <!-- Карточка пользователя -->
+        <div class="user-card">
+            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                <div class="user-avatar-placeholder" id="userAvatar">A</div>
+                <div class="user-info-block">
+                    <div class="user-details">
+                        <h2 id="displayUsername">Загрузка...</h2>
+                        <div class="user-meta">
+                            <span>📧 <span id="displayEmail">...</span></span>
+                            <span id="roleBadge" class="role-badge author">Автор</span>
+                        </div>
+                        <div class="user-meta" style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8;">
+                            <span>📅 В клубе с: <span id="displayJoined">...</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <a href="/to-authors" class="btn-profile btn-primary">+ Отправить рукопись</a>
+                <button id="logoutBtn" class="btn-profile btn-danger">Выйти</button>
+            </div>
+        </div>
+
+        <!-- Секция рукописей -->
+        <div class="manuscripts-section">
+            <div class="section-title">
+                <span>📚 Мои рукописи</span>
+                <span id="submissionsCount" style="font-size: 0.9rem; opacity: 0.7;">0 записей</span>
+            </div>
+            
+            <div id="submissionsList" class="manuscripts-list">
+                <div class="loading-spinner">Загрузка данных...</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Издательство "Остров Рукописей". Все права защищены.</p>
+    </footer>
+
+    <script src="/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const usernameEl = document.getElementById('displayUsername');
+            const emailEl = document.getElementById('displayEmail');
+            const joinedEl = document.getElementById('displayJoined');
+            const roleBadgeEl = document.getElementById('roleBadge');
+            const avatarEl = document.getElementById('userAvatar');
+            const listEl = document.getElementById('submissionsList');
+            const countEl = document.getElementById('submissionsCount');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            try {
+                // Запрос данных профиля
+                const res = await fetch('/api/profile/data');
+                if (!res.ok) throw new Error('Не авторизован');
+                
+                const data = await res.json();
+                
+                // Заполнение данных
+                usernameEl.textContent = data.username;
+                emailEl.textContent = data.email;
+                joinedEl.textContent = new Date(data.joined).toLocaleDateString('ru-RU');
+                
+                // Первая буква имени для аватара
+                avatarEl.textContent = data.username.charAt(0).toUpperCase();
+
+                // Роль
+                if (data.role === 'admin') {
+                    roleBadgeEl.textContent = 'Администратор';
+                    roleBadgeEl.className = 'role-badge admin';
+                } else {
+                    roleBadgeEl.textContent = 'Автор';
+                    roleBadgeEl.className = 'role-badge author';
+                }
+
+                // Список рукописей
+                if (data.submissions.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📜</div>
+                            <p>У вас пока нет отправленных рукописей.</p>
+                            <a href="/to-authors" class="btn-profile btn-outline" style="text-decoration:none; display:inline-block;">Отправить первую</a>
+                        </div>
+                    `;
+                    countEl.textContent = '0 записей';
+                } else {
+                    countEl.textContent = `${data.submissions.length} записей`;
+                    let html = '';
+                    
+                    data.submissions.forEach(sub => {
+                        const date = new Date(sub.submitted_at).toLocaleDateString('ru-RU');
+                        const statusClass = `status-${sub.status}`;
+                        const statusText = {
+                            'Submitted': 'На рассмотрении',
+                            'Approved': 'Принято',
+                            'Rejected': 'Отклонено'
+                        }[sub.status] || sub.status;
+
+                        const fileLink = sub.filename 
+                            ? `<a href="/api/admin/download/${encodeURIComponent(sub.filename)}" target="_blank" title="Скачать файл">📥 Файл</a>` 
+                            : '<span style="opacity:0.5">—</span>';
+
+                        html += `
+                            <div class="manuscript-item">
+                                <div class="ms-title">${sub.manuscript_title}</div>
+                                <div class="ms-genre">${sub.genre || 'Не указан'}</div>
+                                <div class="ms-date">${date}</div>
+                                <div class="ms-status ${statusClass}">${statusText}</div>
+                                <div class="ms-action">${fileLink}</div>
+                            </div>
+                        `;
+                    });
+                    listEl.innerHTML = html;
+                }
+
+            } catch (err) {
+                console.error(err);
+                window.location.href = '/login';
+            }
+
+            // Выход
+            logoutBtn.addEventListener('click', async () => {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/';
+            });
+        });
+    </script>
+</body>
+</html>

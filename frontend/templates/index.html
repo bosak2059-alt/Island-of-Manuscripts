@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Остров Рукописей | Главная</title>
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
+
 <body>
     <header>
         <nav>
             <a href="/" class="logo">Остров Рукописей</a>
             <ul>
-                <li><a href="/" class="active">Главная</a></li>
-                <li><a href="/to-authors">Авторам</a></li>
+                <li><a href="/">Главная</a></li>
                 <li><a href="/catalog">Каталог книг</a></li>
+                <li><a href="/to-authors">Авторам</a></li>
                 <li><a href="/about">О издательстве</a></li>
                 <li><a href="/blog">Блог</a></li>
                 <li><a href="/contacts">Контакты</a></li>
-                <li><a href="/login">Вход</a></li>
-                <li><a href="/register">Регистрация</a></li>
+                <!-- Важно: добавьте класс auth-link сюда -->
+                <li><a href="/login" class="auth-link">Вход</a></li>
+                <li><a href="/register" class="auth-link">Регистрация</a></li>
             </ul>
             <div class="mobile-menu-btn">
                 <span></span>
@@ -33,7 +36,8 @@
         <section class="hero_block">
             <div class="headlines">
                 <h1>Издательство Остров Рукописей: Ваши истории становятся книгами</h1>
-                <h2>Принимаем рукописи в любых жанрах. Профессиональная редакция, распространение и поддержка авторов</h2>
+                <h2>Принимаем рукописи в любых жанрах. Профессиональная редакция, распространение и поддержка авторов
+                </h2>
                 <a href="/to-authors">Отправить книгу на рассмотрение</a>
             </div>
         </section>
@@ -67,7 +71,8 @@
                 <div class="advantage-card">
                     <div class="advantage-icon">✒️</div>
                     <h3>Личный редактор</h3>
-                    <p>Профессиональное сопровождение от первой правки до печати. Вы не останетесь один на один с текстом.</p>
+                    <p>Профессиональное сопровождение от первой правки до печати. Вы не останетесь один на один с
+                        текстом.</p>
                 </div>
             </div>
         </section>
@@ -82,7 +87,8 @@
             <div class="books-showcase">
                 <div class="book-card">
                     <div class="book-cover">
-                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400" alt="Шёпот Архипелага">
+                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400"
+                            alt="Шёпот Архипелага">
                         <span class="book-badge">Новинка</span>
                     </div>
                     <div class="book-info">
@@ -94,7 +100,8 @@
 
                 <div class="book-card">
                     <div class="book-cover">
-                        <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400" alt="Дневники Чернильницы">
+                        <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400"
+                            alt="Дневники Чернильницы">
                         <span class="book-badge">Хит</span>
                     </div>
                     <div class="book-info">
@@ -118,7 +125,8 @@
 
                 <div class="book-card">
                     <div class="book-cover">
-                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400" alt="Хроники Палимпсеста">
+                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400"
+                            alt="Хроники Палимпсеста">
                         <span class="book-badge">Выбор редакции</span>
                     </div>
                     <div class="book-info">
@@ -141,4 +149,5 @@
 
     <script src="/frontend/js/main.js"></script>
 </body>
+
 </html>

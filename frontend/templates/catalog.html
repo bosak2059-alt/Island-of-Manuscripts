@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог книг | Остров Рукописей</title>
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
+
 <body>
     <header>
         <nav>
@@ -17,13 +19,14 @@
             </div>
             <ul>
                 <li><a href="/">Главная</a></li>
+                <li><a href="/catalog">Каталог книг</a></li>
                 <li><a href="/to-authors">Авторам</a></li>
-                <li><a href="/catalog" class="active">Каталог книг</a></li>
                 <li><a href="/about">О издательстве</a></li>
                 <li><a href="/blog">Блог</a></li>
                 <li><a href="/contacts">Контакты</a></li>
-                <li><a href="/login">Вход</a></li>
-                <li><a href="/register">Регистрация</a></li>
+                <!-- Важно: добавьте класс auth-link сюда -->
+                <li><a href="/login" class="auth-link">Вход</a></li>
+                <li><a href="/register" class="auth-link">Регистрация</a></li>
             </ul>
         </nav>
     </header>
@@ -186,4 +189,5 @@
 
     <script src="main.js"></script>
 </body>
+
 </html>
