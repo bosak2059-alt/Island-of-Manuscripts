@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель | Остров Рукописей</title>
+    <!-- Путь к CSS из корня -->
+    <link rel="stylesheet" href="frontend/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Админ-панель</h1>
+        <nav>
+            <a href="/">На сайт</a>
+            <a href="#" onclick="logout()">Выход</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="adminStats" style="display:flex; gap:20px; margin-bottom:30px; font-size:1.2rem;">
+            <!-- Статистика загрузится сюда -->
+        </div>
+
+        <h2>Все рукописи</h2>
+        <table border="1" cellpadding="10" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+                <tr>
+                    <th>Автор</th>
+                    <th>Название</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody id="adminTableBody">
+                <!-- Данные -->
+            </tbody>
+        </table>
+    </main>
+
+    <script src="frontend/js/main.js"></script>
+    <script>
+        async function logout() {
+            await fetch('/api/logout', {method:'POST'});
+            window.location.href = '/login';
+        }
+    </script>
+</body>
+</html>

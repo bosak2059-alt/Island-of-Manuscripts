@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | Остров Рукописей</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <style>
+        /* Те же стили, что и для login.html */
+        .auth-container {
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .auth-title {
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold);
+            color: var(--dark-blue);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .auth-btn:hover {
+            background: var(--gold-hover);
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .auth-footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        .error-msg {
+            color: #ef5350;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .success-msg {
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Остров Рукописей</div>
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/catalog">Книги</a>
+            <a href="/login">Вход</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="auth-container">
+            <h2 class="auth-title">Регистрация автора</h2>
+            
+            <div id="regError" class="error-msg"></div>
+            <div id="regSuccess" class="success-msg"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="username">Ваше имя (Псевдоним)</label>
+                    <input type="text" id="username" name="username" placeholder="Иван Иванов" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email адрес</label>
+                    <input type="email" id="email" name="email" placeholder="example@island.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="Придумайте надежный пароль" required minlength="6">
+                </div>
+
+                <button type="submit" class="auth-btn">Зарегистрироваться</button>
+            </form>
+
+            <div class="auth-footer">
+                Уже есть аккаунт? <a href="/login">Войти</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        © 2024 Издательство «Остров Рукописей». Все права защищены.
+    </footer>
+
+    <script src="/frontend/js/main.js"></script>
+    <script>
+        // Локальная обработка для страницы регистрации
+        const regForm = document.getElementById('registerForm');
+        if(regForm) {
+            regForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const errorDiv = document.getElementById('regError');
+                const successDiv = document.getElementById('regSuccess');
+                const btn = regForm.querySelector('button');
+                
+                btn.disabled = true;
+                btn.textContent = 'Регистрация...';
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+
+                const formData = new FormData(regForm);
+                const data = Object.fromEntries(formData);
+
+                try {
+                    const res = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                    const result = await res.json();
+
+                    if (res.ok) {
+                        successDiv.textContent = result.message;
+                        successDiv.style.display = 'block';
+                        regForm.reset();
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 2000);
+                    } else {
+                        errorDiv.textContent = result.error;
+                        errorDiv.style.display = 'block';
+                        btn.disabled = false;
+                        btn.textContent = 'Зарегистрироваться';
+                    }
+                } catch (err) {
+                    errorDiv.textContent = 'Ошибка соединения с сервером';
+                    errorDiv.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Зарегистрироваться';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

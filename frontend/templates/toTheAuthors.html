@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторам | Остров Рукописей</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">Остров Рукописей</a>
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/to-authors" class="active">Авторам</a></li>
+                <li><a href="/catalog">Каталог книг</a></li>
+                <li><a href="/about">О издательстве</a></li>
+                <li><a href="/blog">Блог</a></li>
+                <li><a href="/contacts">Контакты</a></li>
+                <li><a href="/login">Вход</a></li>
+                <li><a href="/register">Регистрация</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="authors-page">
+            <div class="page-title">
+                <h1>Подача рукописи</h1>
+                <p>Мы всегда в поиске новых талантов. Если вы написали книгу, мы готовы её прочитать</p>
+            </div>
+
+            <section class="content-section">
+                <h2>📋 Требования к рукописи</h2>
+                <div class="requirements-grid">
+                    <div class="requirement-card">
+                        <h3>📚 Жанры (принимаем)</h3>
+                        <ul>
+                            <li>Художественная проза</li>
+                            <li>Фантастика и фэнтези</li>
+                            <li>Детективы</li>
+                            <li>Романы</li>
+                            <li>Детская литература</li>
+                            <li>Нон-фикшн</li>
+                            <li>Поэзия</li>
+                        </ul>
+                    </div>
+                    <div class="requirement-card">
+                        <h3>🚫 Жанры (не принимаем)</h3>
+                        <ul>
+                            <li class="reject">Эротика 18+</li>
+                            <li class="reject">Пропаганда насилия</li>
+                            <li class="reject">Пиратские материалы</li>
+                            <li class="reject">Незавершённые тексты</li>
+                        </ul>
+                    </div>
+                    <div class="requirement-card">
+                        <h3>📏 Объём</h3>
+                        <ul>
+                            <li>От 50 000 знаков</li>
+                            <li>Оптимально: 300-500 тыс.</li>
+                            <li>Поэзия: от 30 стихов</li>
+                        </ul>
+                    </div>
+                    <div class="requirement-card">
+                        <h3>📄 Формат</h3>
+                        <ul>
+                            <li>Word (.doc, .docx)</li>
+                            <li>PDF</li>
+                            <li>Google Docs (ссылка)</li>
+                            <li>Шрифт: Times New Roman</li>
+                            <li>Размер: 14 пт</li>
+                            <li>Интервал: 1.5</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📦 Что нужно подготовить</h2>
+                <div class="prepare-list">
+                    <div class="prepare-item">
+                        <div class="prepare-icon">📝</div>
+                        <div class="prepare-text">
+                            <h3>Синопсис</h3>
+                            <p>Краткое содержание книги (1-2 страницы). Раскройте основную сюжетную линию и ключевых
+                                персонажей.</p>
+                        </div>
+                    </div>
+                    <div class="prepare-item">
+                        <div class="prepare-icon">📖</div>
+                        <div class="prepare-text">
+                            <h3>Первые 3 главы</h3>
+                            <p>Или полная рукопись. Это поможет нам оценить ваш стиль и понять, подходит ли книга нашему
+                                издательству.</p>
+                        </div>
+                    </div>
+                    <div class="prepare-item">
+                        <div class="prepare-icon">👤</div>
+                        <div class="prepare-text">
+                            <h3>Информация об авторе</h3>
+                            <p>Краткая биография, предыдущие публикации, ссылки на соцсети и сайт (если есть).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>📨 Форма подачи заявки</h2>
+                <!-- ✅ ИСПРАВЛЕНО: Добавлен id и enctype -->
+                <form id="submissionForm" method="POST" enctype="multipart/form-data">
+                    <label>Ваше имя *</label>
+                    <input type="text" name="author_name" required>
+
+                    <label>Email *</label>
+                    <input type="email" name="email" required>
+
+                    <label>Телефон</label>
+                    <input type="tel" name="phone">
+
+                    <label>Название рукописи *</label>
+                    <input type="text" name="manuscript_title" required>
+
+                    <label>Жанр *</label>
+                    <select name="genre" required>
+                        <option value="fiction">Художественная проза</option>
+                        <option value="scifi">Фантастика / Фэнтези</option>
+                        <option value="detective">Детектив</option>
+                        <option value="novel">Роман</option>
+                        <option value="children">Детская литература</option>
+                        <option value="nonfiction">Нон-фикшн</option>
+                        <option value="poetry">Поэзия</option>
+                    </select>
+
+                    <label>Объём (знаков)</label>
+                    <input type="number" name="volume">
+
+                    <label>Ссылка на текст</label>
+                    <input type="url" name="text_link" placeholder="https://docs.google.com/...">
+
+                    <label>Или загрузите файл</label>
+                    <input type="file" name="file" accept=".doc,.docx,.pdf">
+
+                    <label>Комментарий для редактора</label>
+                    <textarea name="comment"></textarea>
+
+                    <label>
+                        <input type="checkbox" name="privacy" required>
+                        Я согласен на обработку персональных данных
+                    </label>
+
+                    <button type="submit" class="submit-btn">Отправить на рассмотрение</button>
+                </form>
+
+                <div id="formMessage" class="form-message"></div>
+            </section>
+
+            <section class="content-section">
+                <h2>❓ Частые вопросы (FAQ)</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Берёте ли вы деньги с авторов?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>Нет, мы не берём деньги с авторов.</strong> Издательство работает по классической
+                            модели: мы инвестируем в книгу, а прибыль делим через роялти.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Сколько ждать ответа?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Обычный срок рассмотрения рукописи — <strong>от 2 до 4 недель</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Что если вы откажете?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Отказ не означает, что ваша книга плохая. Возможно, она не подходит нашему текущему портфелю.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Издательство «Остров Рукописей». Все права защищены.</p>
+    </footer>
+
+    <script src="/frontend/js/main.js"></script>
+</body>
+
+</html>

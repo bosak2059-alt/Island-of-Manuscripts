@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Остров Рукописей</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <style>
+        /* Дополнительные стили специально для страниц авторизации */
+        .auth-container {
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .auth-title {
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold);
+            color: var(--dark-blue);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .auth-btn:hover {
+            background: var(--gold-hover);
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .auth-footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        .error-msg {
+            color: #ef5350;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Остров Рукописей</div>
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/catalog">Книги</a>
+            <a href="/login" class="active">Вход</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="auth-container">
+            <h2 class="auth-title">Вход в систему</h2>
+            
+            <div id="loginError" class="error-msg"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email адрес</label>
+                    <input type="email" id="email" name="email" placeholder="example@island.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="auth-btn">Войти</button>
+            </form>
+
+            <div class="auth-footer">
+                Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        © 2024 Издательство «Остров Рукописей». Все права защищены.
+    </footer>
+
+    <script src="/frontend/js/main.js"></script>
+    <script>
+        // Локальная обработка ошибок для страницы входа
+        const loginForm = document.getElementById('loginForm');
+        if(loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const errorDiv = document.getElementById('loginError');
+                const btn = loginForm.querySelector('button');
+                
+                btn.disabled = true;
+                btn.textContent = 'Проверка...';
+                errorDiv.style.display = 'none';
+
+                const formData = new FormData(loginForm);
+                const data = Object.fromEntries(formData);
+
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                    const result = await res.json();
+
+                    if (res.ok) {
+                        window.location.href = result.redirect;
+                    } else {
+                        errorDiv.textContent = result.error;
+                        errorDiv.style.display = 'block';
+                        btn.disabled = false;
+                        btn.textContent = 'Войти';
+                    }
+                } catch (err) {
+                    errorDiv.textContent = 'Ошибка соединения с сервером';
+                    errorDiv.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Войти';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
