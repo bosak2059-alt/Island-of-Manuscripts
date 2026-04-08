@@ -547,7 +547,6 @@ def admin_update_status():
 @app.route('/api/admin/download/<filename>')
 @admin_required
 def admin_download(filename):
-    # В реальном проекте здесь нужна дополнительная проверка прав
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if os.path.exists(filepath):
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
